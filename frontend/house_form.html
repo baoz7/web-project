@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>House Price Predictor</title>
+  </head>
+  <body>
+    <header>
+      <h1>House Price Prediction Form</h1>
+    </header>
+
+    <main>
+      <section>
+        <!-- Lab 4: Data-Entry Form -->
+        <form action="/predict" method="get">
+          <label for="area">Property Area (m²)</label>
+          <input id="area" name="area" type="number" required />
+          <br /><br />
+
+          <label for="bedrooms">Bedrooms</label>
+          <input id="bedrooms" name="bedrooms" type="number" required />
+          <br /><br />
+
+          <label for="location">Location</label>
+          <select id="location" name="location">
+            <option value="hanoi">Hanoi</option>
+            <option value="hcmc">Ho Chi Minh City</option>
+            <option value="other">Other</option>
+          </select>
+          <br /><br />
+
+          <button type="submit">Predict Price</button>
+        </form>
+
+        <!-- Result display area for Week 6 -->
+        <h3 id="result"></h3>
+      </section>
+
+      <section>
+        <br />
+        <hr />
+        <br />
+        <!-- Lab 3: Data Table -->
+        <table>
+          <caption>
+            Model Multipliers by Location
+          </caption>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Multiplier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hanoi</td>
+              <td>1.3x</td>
+            </tr>
+            <tr>
+              <td>Ho Chi Minh City</td>
+              <td>1.25x</td>
+            </tr>
+            <tr>
+              <td colspan="2">Other locations have no multiplier</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <script>
+      document
+        .querySelector("form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Stops the page from reloading
+
+          const area = document.getElementById("area").value;
+          const bedrooms = document.getElementById("bedrooms").value;
+          const location = document.getElementById("location").value;
+
+          try {
+            const response = await fetch(
+              `/predict?area=${area}&bedrooms=${bedrooms}&location=${location}`,
+            );
+            const data = await response.json();
+            document.getElementById("result").innerText =
+              `Predicted Price: ${data.predicted_price.toLocaleString()} VND`;
+          } catch (error) {
+            document.getElementById("result").innerText =
+              "Error calculating price.";
+          }
+        });
+    </script>
+  </body>
+</html>
